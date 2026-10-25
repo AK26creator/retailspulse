@@ -1,0 +1,26 @@
+Rows: 525461
+Columns: 8
+
+Missing values:
+Invoice             0
+StockCode           0
+Description      2928
+Quantity            0
+InvoiceDate         0
+Price               0
+Customer ID    107927
+Country             0
+
+Duplicate rows:
+6865
+
+Statistical summary:
+                count   unique                                 top    freq                        mean                  min                  25%                  50%                  75%                  max          std
+Invoice      525461.0  28816.0                            537434.0   675.0                         NaN                  NaN                  NaN                  NaN                  NaN                  NaN          NaN
+StockCode      525461     4632                              85123A    3516                         NaN                  NaN                  NaN                  NaN                  NaN                  NaN          NaN
+Description    522533     4681  WHITE HANGING HEART T-LIGHT HOLDER    3549                         NaN                  NaN                  NaN                  NaN                  NaN                  NaN          NaN
+Quantity     525461.0      NaN                                 NaN     NaN                   10.337667              -9600.0                  1.0                  3.0                 10.0              19152.0    107.42411
+InvoiceDate    525461      NaN                                 NaN     NaN  2010-06-28 11:37:36.845018  2009-12-01 07:45:00  2010-03-21 12:20:00  2010-07-06 09:51:00  2010-10-15 12:45:00  2010-12-09 20:01:00          NaN
+Price        525461.0      NaN                                 NaN     NaN                    4.688834            -53594.36                 1.25                  2.1                 4.21             25111.09   146.126914
+Customer ID  417534.0      NaN                                 NaN     NaN                15360.645478              12346.0              13983.0              15311.0              16799.0              18287.0  1680.811316
+Country        525461       40                      United Kingdom  485852                         NaN                  NaN                  NaN                  NaN                  NaN                  NaN          NaN
