@@ -5,7 +5,8 @@ Exact duplicate rows removed: 6865
 Rows with missing required fields: 2928
 Rows with non-positive quantities in deduplicated data: 10475
 Rows with non-positive prices in deduplicated data: 756
-Final rows: 504731
-Rows removed overall: 20730
-Missing customer IDs retained: 103815
-Final revenue total: 10272136.23
+Rows retained for project: 2000
+Maximum sample size: 2000
+Missing customer IDs in selected data: 300
+Sample revenue total: 35849.38
+Note: This is a limited sample, not the full dataset.

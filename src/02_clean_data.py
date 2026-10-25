@@ -9,6 +9,9 @@ RAW_FILE = PROJECT_DIR / "data" / "online_retail_II.xlsx"
 OUTPUT_FILE = PROJECT_DIR / "data" / "retail_cleaned.csv"
 QUALITY_FILE = PROJECT_DIR / "reports" / "cleaning_report.txt"
 
+# Keep the project small and easy to import into MySQL
+MAX_ROWS = 2000
+
 # Load the first worksheet
 df = pd.read_excel(RAW_FILE, sheet_name=0)
 
@@ -34,7 +37,6 @@ df["Price"] = pd.to_numeric(
 )
 
 # Convert Customer_ID to a nullable integer
-# Missing customer IDs remain missing rather than becoming zero
 df["Customer_ID"] = pd.to_numeric(
     df["Customer_ID"], errors="coerce"
 ).astype("Int64")
@@ -58,8 +60,7 @@ missing_required = int(
 
 df = df.dropna(subset=required_columns).copy()
 
-# Retain positive-quantity, positive-price lines
-# for the primary sales analysis
+# Keep positive-quantity and positive-price transactions
 invalid_quantity = int((df["Quantity"] <= 0).sum())
 invalid_price = int((df["Price"] <= 0).sum())
 
@@ -76,10 +77,14 @@ df["YearMonth"] = df["InvoiceDate"].dt.to_period("M").astype(str)
 df["Year"] = df["InvoiceDate"].dt.year
 df["Month"] = df["InvoiceDate"].dt.month
 
-# Count missing customer IDs before saving
+# Count missing customer IDs before selecting the sample
 missing_customer_ids = int(df["Customer_ID"].isna().sum())
 
-# Save missing values as \N for MySQL LOAD DATA imports
+# Keep only 2,000 rows for this fresher project
+# Sorting by date makes the selected period consistent
+df = df.sort_values("InvoiceDate").head(MAX_ROWS).copy()
+
+# Save missing values as \N for MySQL-compatible import workflows
 df.to_csv(
     OUTPUT_FILE,
     index=False,
@@ -91,9 +96,7 @@ with open(QUALITY_FILE, "w", encoding="utf-8") as file:
     file.write("RETAILPULSE DATA CLEANING REPORT\n")
     file.write("=" * 40 + "\n")
     file.write(f"Original rows: {original_rows}\n")
-    file.write(
-        f"Exact duplicate rows removed: {duplicate_count}\n"
-    )
+    file.write(f"Exact duplicate rows removed: {duplicate_count}\n")
     file.write(
         f"Rows with missing required fields: {missing_required}\n"
     )
@@ -105,19 +108,24 @@ with open(QUALITY_FILE, "w", encoding="utf-8") as file:
         "Rows with non-positive prices in deduplicated data: "
         f"{invalid_price}\n"
     )
-    file.write(f"Final rows: {len(df)}\n")
+    file.write(f"Rows retained for project: {len(df)}\n")
+    file.write(f"Maximum sample size: {MAX_ROWS}\n")
     file.write(
-        f"Rows removed overall: {original_rows - len(df)}\n"
+        f"Missing customer IDs in selected data: "
+        f"{df['Customer_ID'].isna().sum()}\n"
     )
     file.write(
-        f"Missing customer IDs retained: {missing_customer_ids}\n"
+        f"Sample revenue total: {df['Revenue'].sum():.2f}\n"
     )
-    file.write(f"Final revenue total: {df['Revenue'].sum():.2f}\n")
+    file.write(
+        "Note: This is a limited sample, not the full dataset.\n"
+    )
 
 print("Cleaning completed!")
 print("Original rows:", original_rows)
-print("Final rows:", len(df))
-print("Total revenue:", round(df["Revenue"].sum(), 2))
-print("Missing customer IDs retained:", missing_customer_ids)
-print("Saved to:", OUTPUT_FILE)
+print("Rows selected for project:", len(df))
+print("Sample revenue:", round(df["Revenue"].sum(), 2))
+print("Missing customer IDs:", int(df["Customer_ID"].isna().sum()))
+print("Saved CSV:", OUTPUT_FILE)
+print("Saved report:", QUALITY_FILE)
 

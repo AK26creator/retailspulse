@@ -1,7 +1,25 @@
+# Python
+
+**pycache**/
+*.py[cod]
 .venv/
 venv/
-__pycache__/
-*.py[cod]
 .env
-.env.*
-!.env.example
+
+# Data files
+
+data/*.xlsx
+data/*.csv
+
+# Power BI temporary and backup files
+
+*.pbit
+*.bak
+
+# Editor and operating system files
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
